@@ -6,39 +6,39 @@
  */
 
 #include "DataStruct.h"
-#include "trainer.h"
-#include "pokemon.h"
+#include "troll.h"
+#include "post.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
 using std::cout;
 using std::endl;
 
-pokemon* DataStruct::getMaxPokemon() {
-	return PokemonTree->getBiggestData();
+Post* DataStruct::getMaxPost() {
+	return PostTree->getBiggestData();
 }
 
-StatusType DataStruct::addTrainer(int id) {
+StatusType DataStruct::addTroll(int id) {
 	try {
-		trainer* newTrainer = new trainer(id);
-		if (!(this->firstTrainer)) {
-			this->firstTrainer = newTrainer;
+		Troll* newTroll = new Troll(id);
+		if (!(this->firstTroll)) {
+			this->firstTroll = newTroll;
 			return SUCCESS;
 		} else {
-			trainer* tempTrainer = firstTrainer;
-			while (tempTrainer) {
-				if (tempTrainer->getId() == id) {
-					delete newTrainer;
+			Troll* tempTroll = firstTroll;
+			while (tempTroll) {
+				if (tempTroll->getId() == id) {
+					delete newTroll;
 					return FAILURE;
 				}
-				tempTrainer = tempTrainer->getNextTrainer();
+				tempTroll = tempTroll->getNextTroll();
 
 			}
-			tempTrainer = firstTrainer;
-			while (tempTrainer->getNextTrainer()) {
-				tempTrainer = tempTrainer->getNextTrainer();
+			tempTroll = firstTroll;
+			while (tempTroll->getNextTroll()) {
+				tempTroll = tempTroll->getNextTroll();
 			}
-			tempTrainer->setNextTrainer(newTrainer);
+			tempTroll->setNextTroll(newTroll);
 			return SUCCESS;
 		}
 	} catch (std::bad_alloc& e) {
@@ -47,27 +47,27 @@ StatusType DataStruct::addTrainer(int id) {
 
 }
 
-StatusType DataStruct::CatchPokemon(int pokemonID, int trainerID, int level) {
+StatusType DataStruct::PublishPost(int PostID, int TrollID, int Likes) {
 	StatusType stat;
-	pokemonById newPokemonById(pokemonID, level, trainerID);
-	pokemon newPokemon(pokemonID, level, trainerID);
+	PostById newPostById(PostID, Likes, TrollID);
+	Post newPost(PostID, Likes, TrollID);
 
-	//check if pokemon exist in PokemonTreeById tree
-	if (PokemonTreeById->isIn(&newPokemonById)) {
+	//check if Post exist in PostTreeById tree
+	if (PostTreeById->isIn(&newPostById)) {
 		return FAILURE;
 	}
-	//check if trainer exist
-	trainer* trainerTemp = findTrainer(trainerID);
-	if(trainerTemp==NULL){
+	//check if Troll exist
+	Troll* TrollTemp = findTroll(TrollID);
+	if(TrollTemp==NULL){
 		return FAILURE;
 	}
-	//add new pokemon to two main trees and trainer's tree
+	//add new Post to two main trees and Troll's tree
 	try {
-		stat = PokemonTree->add(&newPokemon);
+		stat = PostTree->add(&newPost);
 		assert(stat == SUCCESS);
-		stat = PokemonTreeById->add(&newPokemonById);
+		stat = PostTreeById->add(&newPostById);
 		assert(stat == SUCCESS);
-		stat = trainerTemp->addPokemon(&newPokemon);
+		stat = TrollTemp->addPost(&newPost);
 		assert(stat == SUCCESS);
 	} catch (std::bad_alloc& e) {
 		return ALLOCATION_ERROR;
@@ -75,62 +75,62 @@ StatusType DataStruct::CatchPokemon(int pokemonID, int trainerID, int level) {
 	return SUCCESS;
 }
 
-StatusType DataStruct::FreePokemon(int pokemonID) {
+StatusType DataStruct::DeletePost(int PostID) {
 
-	pokemonById pokeById = pokemonById(pokemonID);
+	PostById postById = PostById(PostID);
 
-	//check if pokemon exists in PokemonTreeById tree
-	if (!PokemonTreeById->isIn(&pokeById)) {
+	//check if Post exists in PostTreeById tree
+	if (!PostTreeById->isIn(&postById)) {
 		return FAILURE;
 	}
 
-	//create pokemons for finding them in trees
-	pokemonById* pokeByIdOld = PokemonTreeById->getData(&pokeById);
-	pokemon poke = pokemon(pokemonID, pokeByIdOld->getLevel());
+	//create Posts for finding them in trees
+	PostById* postByIdOld = PostTreeById->getData(&postById);
+	Post post = Post(PostID, postByIdOld->getLikes());
 
-	//free pokemon from two main trees
-	PokemonTree->remove(&poke);
-	PokemonTreeById->remove(&pokeById);
+	//free Post from two main trees
+	PostTree->remove(&post);
+	PostTreeById->remove(&postById);
 
-	//free pokemon from it's trainer's tree
-	trainer* tempTrainer = findTrainer(pokeByIdOld->GetMyTrainer());
-	assert( tempTrainer != NULL );
-	tempTrainer->getPokemonTree()->remove(&poke);
+	//free Post from it's Troll's tree
+	Troll* tempTroll = findTroll(postByIdOld->GetMyTroll());
+	assert( tempTroll != NULL );
+	tempTroll->getPostTree()->remove(&post);
 
-	delete pokeByIdOld;	//release pokemon returned for knowing its level
+	delete postByIdOld;	//release Post returned for knowing its Likes
 
 	return SUCCESS;
 }
 
-StatusType DataStruct::LevelUp(int pokemonID, int levelIncrease) {
+StatusType DataStruct::FeedTroll(int PostID, int LikesIncrease) {
 
-	pokemonById PokeOnlyId = pokemonById(pokemonID);
+	PostById postOnlyId = PostById(PostID);
 
-	//check if pokemon exists in PokemonTreeById tree
-	if (!PokemonTreeById->isIn(&PokeOnlyId)) {
+	//check if Post exists in PostTreeById tree
+	if (!PostTreeById->isIn(&postOnlyId)) {
 		return FAILURE;
 	}
 
 	try {
-		//create pokemons for remove and re-adding them with new level
-		pokemonById* pokeByIdOld = PokemonTreeById->getData(&PokeOnlyId);
-		pokemon pokeOld = pokemon(pokemonID, pokeByIdOld->getLevel(),pokeByIdOld->GetMyTrainer());
-		pokemonById newPokeById(pokemonID, pokeByIdOld->getLevel() + levelIncrease,pokeByIdOld->GetMyTrainer());
-		pokemon newPokemon(pokemonID, pokeOld.getLevel() + levelIncrease, pokeOld.GetMyTrainer());
+		//create Posts for remove and re-adding them with new Likes
+		PostById* postByIdOld = PostTreeById->getData(&postOnlyId);
+		Post postOld = Post(PostID, postByIdOld->getLikes(),postByIdOld->GetMyTroll());
+		PostById newpostById(PostID, postByIdOld->getLikes() + LikesIncrease,postByIdOld->GetMyTroll());
+		Post newPost(PostID, postOld.getLikes() + LikesIncrease, postOld.GetMyTroll());
 
-		//remove pokemon with old level and add with new level to trees
-		PokemonTreeById->remove(pokeByIdOld);
-		PokemonTreeById->add(&newPokeById);
-		PokemonTree->remove(&pokeOld);
-		PokemonTree->add(&newPokemon);
+		//remove Post with old Likes and add with new Likes to trees
+		PostTreeById->remove(postByIdOld);
+		PostTreeById->add(&newpostById);
+		PostTree->remove(&postOld);
+		PostTree->add(&newPost);
 
-		//remove pokemon with old level and add with new level to trainer's tree
-		trainer* tempTrainer = findTrainer(pokeByIdOld->GetMyTrainer());
-		assert( tempTrainer != NULL );
-		tempTrainer->getPokemonTree()->remove(&pokeOld);
-		tempTrainer->getPokemonTree()->add(&newPokemon);
+		//remove Post with old Likes and add with new Likes to Troll's tree
+		Troll* tempTroll = findTroll(postByIdOld->GetMyTroll());
+		assert( tempTroll != NULL );
+		tempTroll->getPostTree()->remove(&postOld);
+		tempTroll->getPostTree()->add(&newPost);
 
-		delete pokeByIdOld;
+		delete postByIdOld;
 	} catch (std::bad_alloc& e) {
 		return ALLOCATION_ERROR;
 	}
@@ -139,34 +139,34 @@ StatusType DataStruct::LevelUp(int pokemonID, int levelIncrease) {
 }
 
 
-StatusType DataStruct::GetTopPokemon(int trainerID, int *pokemonID){
-	assert(trainerID != 0);
+StatusType DataStruct::GetTopPost(int TrollID, int *PostID){
+	assert(TrollID != 0);
 	try {
-		if (trainerID < 0) {	//for getting pokemons from all trainers
-			pokemon* poke = getMaxPokemon();//get max pokemon from main tree
-			if(poke == NULL)//in case no pokemon exist
+		if (TrollID < 0) {	//for getting Posts from all Trolls
+			Post* post = getMaxPost();//get max Post from main tree
+			if(post == NULL)//in case no Post exist
 			{
-				*pokemonID=-1;
+				*PostID=-1;
 				return SUCCESS;
 			}
-			*pokemonID = poke->getId();
-			delete poke;
+			*PostID = post->getId();
+			delete post;
 			return SUCCESS;
-		} else {	//for getting pokemons from trainer
-			assert(trainerID > 0);
+		} else {	//for getting Posts from Troll
+			assert(TrollID > 0);
 
-			trainer* tempTrainer = findTrainer(trainerID);
-			if(tempTrainer == NULL){
+			Troll* tempTroll = findTroll(TrollID);
+			if(tempTroll == NULL){
 				return FAILURE;
 			}
-			pokemon* poke = tempTrainer->getMaxPokemon();//get max pokemon from trainer
-			if(poke == NULL)//in case no pokemon exist in trainer
+			Post* post = tempTroll->getMaxPost();//get max Post from Troll
+			if(post == NULL)//in case no Post exist in Troll
 			{
-				*pokemonID=-1;
+				*PostID=-1;
 				return SUCCESS;
 			}
-			*pokemonID = poke->getId();
-			delete poke;
+			*PostID = post->getId();
+			delete post;
 			return SUCCESS;
 		}
 	} catch (std::bad_alloc& e) {
@@ -176,40 +176,40 @@ StatusType DataStruct::GetTopPokemon(int trainerID, int *pokemonID){
 	return SUCCESS;
 }
 
-StatusType DataStruct::GetAllPokemonsByLevel(int trainerID, int **pokemons,
-		int *numOfPokemon) {
-	tree<pokemon>* tree = NULL;
-	if (trainerID > 0) {	//for getting pokemons from specific trainer
-		trainer* trainerTemp = findTrainer(trainerID);
-		if(trainerTemp==NULL){
+StatusType DataStruct::GetAllPostsByLikes(int TrollID, int **Posts,
+		int *numOfPost) {
+	tree<Post>* tree = NULL;
+	if (TrollID > 0) {	//for getting Posts from specific Troll
+		Troll* TrollTemp = findTroll(TrollID);
+		if(TrollTemp==NULL){
 			return FAILURE;
 		}
-		tree = trainerTemp->getPokemonTree();	//save pointer to trainer's tree
-	} else {	//for getting pokemons from all trainers
-		assert(trainerID < 0);
-		tree = PokemonTree;	//save pointer to main tree
+		tree = TrollTemp->getPostTree();	//save pointer to Troll's tree
+	} else {	//for getting Posts from all Trolls
+		assert(TrollID < 0);
+		tree = PostTree;	//save pointer to main tree
 	}
-	if (tree->getSize() == 0) {//in case there are no pokemon in tree
-		*numOfPokemon = 0;
-		*pokemons = NULL;
+	if (tree->getSize() == 0) {//in case there are no Post in tree
+		*numOfPost = 0;
+		*Posts = NULL;
 		return SUCCESS;
 	}
 	int tempNum = 0;
-	pokemon** pokArray = NULL;
+	Post** pokArray = NULL;
 	try {
-		//get array of pointers to pokemons in tree
+		//get array of pointers to Posts in tree
 		pokArray = tree->getAllDataInReverseOrder(&tempNum);
-		//allocate array of pokemon id to return
+		//allocate array of Post id to return
 		int* tempPtr = (int*) malloc(sizeof(int) * (tempNum));
 		if (tempPtr == NULL) {
 			return ALLOCATION_ERROR;
 		}
-		//fill array of pokemon id from array of pokemons
+		//fill array of Post id from array of Posts
 		for (int i = 0; i < tempNum; i++) {
 			tempPtr[i] = pokArray[i]->getId();
 		}
-		*numOfPokemon = tempNum;
-		*pokemons = tempPtr;
+		*numOfPost = tempNum;
+		*Posts = tempPtr;
 		delete[] pokArray;
 	} catch (std::bad_alloc& e) {
 		return ALLOCATION_ERROR;
@@ -218,45 +218,45 @@ StatusType DataStruct::GetAllPokemonsByLevel(int trainerID, int **pokemons,
 	return SUCCESS;
 }
 
-StatusType DataStruct::EvolvePokemon(int pokemonID, int evolvedID) {
+StatusType DataStruct::EvolvePost(int PostID, int evolvedID) {
 
-	pokemonById tempPokeById = pokemonById(pokemonID);
-	pokemonById tempEvolvePokeById = pokemonById(evolvedID);
+	PostById temppostById = PostById(PostID);
+	PostById tempEvolvepostById = PostById(evolvedID);
 
-	//check if pokemon exist with old id and there is no pokemon with new id
-	if (!PokemonTreeById->isIn(&tempPokeById) || PokemonTreeById->isIn(&tempEvolvePokeById)) {
+	//check if Post exist with old id and there is no Post with new id
+	if (!PostTreeById->isIn(&temppostById) || PostTreeById->isIn(&tempEvolvepostById)) {
 		return FAILURE;
 	}
 	StatusType stat;
 	try {
-		//get data of pokemon with the old id
-		pokemonById* tempPokeOldTreeById = PokemonTreeById->getData(&tempPokeById);
-		int level = tempPokeOldTreeById->getLevel();
-		int myTrainerId = tempPokeOldTreeById->GetMyTrainer();
-		delete tempPokeOldTreeById;
+		//get data of Post with the old id
+		PostById* temppostOldTreeById = PostTreeById->getData(&temppostById);
+		int Likes = temppostOldTreeById->getLikes();
+		int myTrollId = temppostOldTreeById->GetMyTroll();
+		delete temppostOldTreeById;
 
-		//find trainer with the pokemon
-		trainer* tempTrainer = findTrainer(myTrainerId);
-		assert(tempTrainer!=NULL);
+		//find Troll with the Post
+		Troll* tempTroll = findTroll(myTrollId);
+		assert(tempTroll!=NULL);
 
-		//remove the pokemon from two main trees and trainer tree
-		pokemonById pokeOldTreeById(pokemonID,level,myTrainerId);
-		pokemon pokeOldTree(pokemonID,level,myTrainerId);
-		stat = PokemonTree->remove(&pokeOldTree);
+		//remove the Post from two main trees and Troll tree
+		PostById postOldTreeById(PostID,Likes,myTrollId);
+		Post postOldTree(PostID,Likes,myTrollId);
+		stat = PostTree->remove(&postOldTree);
 		assert(stat==SUCCESS);
-		stat = PokemonTreeById->remove(&pokeOldTreeById);
+		stat = PostTreeById->remove(&postOldTreeById);
 		assert(stat==SUCCESS);
-		stat = tempTrainer->getPokemonTree()->remove(&pokeOldTree);
+		stat = tempTroll->getPostTree()->remove(&postOldTree);
 		assert(stat==SUCCESS);
 
-		//add the pokemon with new id to the two main trees and trainer tree
-		pokemon newPokemon(evolvedID, level, myTrainerId);
-		pokemonById newPokemonById(evolvedID, level, myTrainerId);
-		stat = PokemonTree->add(&newPokemon);
+		//add the Post with new id to the two main trees and Troll tree
+		Post newPost(evolvedID, Likes, myTrollId);
+		PostById newPostById(evolvedID, Likes, myTrollId);
+		stat = PostTree->add(&newPost);
 		assert(stat==SUCCESS);
-		stat = PokemonTreeById->add(&newPokemonById);
+		stat = PostTreeById->add(&newPostById);
 		assert(stat==SUCCESS);
-		stat = tempTrainer->getPokemonTree()->add(&newPokemon);
+		stat = tempTroll->getPostTree()->add(&newPost);
 		assert(stat==SUCCESS);
 
 	} catch (std::bad_alloc& e) {
@@ -265,68 +265,68 @@ StatusType DataStruct::EvolvePokemon(int pokemonID, int evolvedID) {
 	return SUCCESS;
 }
 
-void DataStruct::deleteTrainers() {
-//delete Trainers:
-	trainer* tempTrainer = this->firstTrainer;
-	if (tempTrainer == NULL) {
+void DataStruct::deleteTrolls() {
+//delete Trolls:
+	Troll* tempTroll = this->firstTroll;
+	if (tempTroll == NULL) {
 		return;
 	}
-	trainer* next = tempTrainer->getNextTrainer();
-	if (tempTrainer) {
-		delete tempTrainer;
+	Troll* next = tempTroll->getNextTroll();
+	if (tempTroll) {
+		delete tempTroll;
 	}
 	while (next) {
-		tempTrainer = next;
-		next = next->getNextTrainer();
-		delete tempTrainer;
+		tempTroll = next;
+		next = next->getNextTroll();
+		delete tempTroll;
 	}
 }
 
-StatusType DataStruct::UpdateLevels(int stoneCode, int stoneFactor) {
+StatusType DataStruct::UpdateLikes(int stoneCode, int stoneFactor) {
 	int size;
 
 	//
-	pokemon** array = PokemonTree->getAllDataInReverseOrder(&size);
-	UpdateReorderPokemons(array, size, stoneCode, stoneFactor);
+	Post** array = PostTree->getAllDataInReverseOrder(&size);
+	UpdateReorderPosts(array, size, stoneCode, stoneFactor);
 	delete[] array;
 
-	pokemonById** arrayById = PokemonTreeById->getAllDataInReverseOrder(&size);
-	UpdateLevelPokemonsById(arrayById, size, stoneCode, stoneFactor);
+	PostById** arrayById = PostTreeById->getAllDataInReverseOrder(&size);
+	UpdateLikesPostsById(arrayById, size, stoneCode, stoneFactor);
 	delete[] arrayById;
 
-	trainer* tempTrainer = firstTrainer;
-	while (tempTrainer) {
-		array = tempTrainer->getPokemonTree()->getAllDataInReverseOrder(&size);
-		UpdateReorderPokemons(array, size, stoneCode, stoneFactor);
+	Troll* tempTroll = firstTroll;
+	while (tempTroll) {
+		array = tempTroll->getPostTree()->getAllDataInReverseOrder(&size);
+		UpdateReorderPosts(array, size, stoneCode, stoneFactor);
 		delete[] array;
-		tempTrainer = tempTrainer->getNextTrainer();
+		tempTroll = tempTroll->getNextTroll();
 	}
 	return SUCCESS;
 }
 
 
-tree<pokemon>* DataStruct::getTree() {
-	return PokemonTree;
+tree<Post>* DataStruct::getTree() {
+	return PostTree;
 }
 
-void DataStruct::printTrainers() {
-	trainer* tempTrainer = this->firstTrainer;
-	pokemon** pokArray = NULL;
-	while (tempTrainer) {
+void DataStruct::printTrolls() {
+	Troll* tempTroll = this->firstTroll;
+	Post** pokArray = NULL;
+	while (tempTroll) {
 		int tempNum = 0;
 
 
-		pokArray = tempTrainer->getPokemonTree()->getAllDataInReverseOrder(
+		pokArray = tempTroll->getPostTree()->getAllDataInReverseOrder(
 				&tempNum);
 		if(tempNum == 0){
-			tempTrainer = tempTrainer->getNextTrainer();
+			tempTroll = tempTroll->getNextTroll();
 			continue;
 		}
 		int* tempPtr = (int*) malloc(sizeof(int) * (tempNum));
 		for (int i = 0; i < tempNum; i++) {
 			tempPtr[i] = pokArray[i]->getId();
 		}
-		cout << "[Trainer id: " << tempTrainer->getId() << "] pokemons Id's:[";
+		cout << "[Troll id: " << tempTroll->getId() << "] Posts Id's:[";
 		for (int i = 0; i < tempNum; i++) {
 			cout << tempPtr[i] << ", ";
 		}
@@ -334,17 +334,17 @@ void DataStruct::printTrainers() {
 		free(tempPtr);
 		delete[] pokArray;
 
-		tempTrainer = tempTrainer->getNextTrainer();
+		tempTroll = tempTroll->getNextTroll();
 	}
 }
 
-trainer* DataStruct::findTrainer(int trainerId){
-	trainer* temp = firstTrainer;
+Troll* DataStruct::findTroll(int TrollId){
+	Troll* temp = firstTroll;
 	while(temp!=NULL){
-		if( temp->getId() == trainerId ){
+		if( temp->getId() == TrollId ){
 			return temp;
 		}
-		temp = temp->getNextTrainer();
+		temp = temp->getNextTroll();
 	}
 	return NULL;
 }

@@ -13,12 +13,17 @@
 /* command line.                                                           */
 /***************************************************************************/
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "library1.h"
 #include <iostream>
+
+
+
 using namespace std;
 
 #ifdef __cplusplus

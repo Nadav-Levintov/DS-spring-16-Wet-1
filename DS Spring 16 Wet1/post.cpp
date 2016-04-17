@@ -99,10 +99,10 @@ void UpdateReorderPosts(Post** list,int size,int postsCode, int postsFactor){
 	delete[] organized;
 }
 
-void UpdatelikesPostsById(PostById** list,int size,int postsCode, int postsFactor){
+void UpdateLikesPostsById(PostById** list,int size,int postsCode, int postsFactor){
 	for(int i = 0 ; i<size ; i++ ){
 		if(list[i]->getId() % postsCode == 0){
-			list[i]->setlikes( list[i]->getlikes() * postsFactor );
+			list[i]->setLikes( list[i]->getLikes() * postsFactor );
 		}
 	}
 }

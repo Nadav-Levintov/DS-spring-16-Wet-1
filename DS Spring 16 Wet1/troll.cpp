@@ -1,21 +1,21 @@
 /*
- * trainer.cpp
+ * Troll.cpp
  *
  *  Created on: 1 áãöî 2015
  *      Author: Nir Diamant
  */
-#include "trainer.h"
+#include "troll.h"
 
-pokemon* trainer::getMaxPokemon() {
-	return PokemonTree->getBiggestData();
+Post* Troll::getMaxPost() {
+	return PostTree->getBiggestData();
 }
-trainer* trainer::getNextTrainer() {
-	return nextTrainer;
+Troll* Troll::getNextTroll() {
+	return nextTroll;
 }
-void trainer::setNextTrainer(trainer* newTrainer) {
-	nextTrainer = newTrainer;
+void Troll::setNextTroll(Troll* newTroll) {
+	nextTroll = newTroll;
 }
-StatusType trainer::addPokemon(pokemon* p) {
-	return PokemonTree->add(p);
+StatusType Troll::addPost(Post* p) {
+	return PostTree->add(p);
 }
 

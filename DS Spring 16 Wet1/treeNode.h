@@ -119,7 +119,7 @@ public:
 	T* getData(T* key);
 };
 
-using std::max;
+//using std::max;
 
 template<class T>
 T* node<T>::GetData() {

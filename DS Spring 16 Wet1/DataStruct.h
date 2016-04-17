@@ -8,54 +8,52 @@
 #ifndef DATASTRUCT_H_
 #define DATASTRUCT_H_
 
-#include "trainer.h"
+#include "Troll.h"
 
 class DataStruct {
 private:
-	trainer* firstTrainer;
-	tree<pokemon>* PokemonTree;
-	tree<pokemonById>* PokemonTreeById;
+	Troll* firstTroll;
+	tree<Post>* PostTree;
+	tree<PostById>* PostTreeById;
 public:
 
 	DataStruct() :
-			firstTrainer(NULL){
-		PokemonTree = new tree<pokemon>();
-		PokemonTreeById = new tree<pokemonById>();
+			firstTroll(NULL){
+		PostTree = new tree<Post>();
+		PostTreeById = new tree<PostById>();
 	}
 	~DataStruct() {
-		deleteTrainers();
-		delete PokemonTree;
-		delete PokemonTreeById;
+		deleteTrolls();
+		delete PostTree;
+		delete PostTreeById;
 	}
 
-	pokemon* getMaxPokemon();
+	Post* getMaxPost();
 
-	StatusType addTrainer(int id);
+	StatusType addTroll(int id);
 
-	StatusType CatchPokemon(int pokemonID, int trainerID, int level);
+	StatusType PublishPost(int PostID, int TrollID, int Likes);
 
-	StatusType FreePokemon(int pokemonID);
+	StatusType DeletePost(int PostID);
 
-	StatusType LevelUp(int pokemonID, int levelIncrease);
+	StatusType FeedTroll(int PostID, int LikesIncrease);
 
-//	pokemon* GetTopPokemon(int trainerID, int *pokemonID);
+	StatusType GetTopPost(int TrollID, int *PostID);
 
-	StatusType GetTopPokemon(int trainerID, int *pokemonID);
+	StatusType EvolvePost(int PostID, int evolvedID);
 
-	StatusType EvolvePokemon(int pokemonID, int evolvedID);
+	StatusType GetAllPostsByLikes(int TrollID, int **Posts,
+			int *numOfPost);
 
-	StatusType GetAllPokemonsByLevel(int trainerID, int **pokemons,
-			int *numOfPokemon);
+	void printTrolls();
 
-	void printTrainers();
+	void deleteTrolls();
 
-	void deleteTrainers();
+	StatusType UpdateLikes(int stoneCode, int stoneFactor);
 
-	StatusType UpdateLevels(int stoneCode, int stoneFactor);
+	tree<Post>* getTree();
 
-	tree<pokemon>* getTree();
-
-	trainer* findTrainer(int trainerId);
+	Troll* findTroll(int TrollId);
 };
 
 #endif /* DATASTRUCT_H_ */

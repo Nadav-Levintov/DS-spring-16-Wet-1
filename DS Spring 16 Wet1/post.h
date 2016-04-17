@@ -26,7 +26,7 @@ public:
 	Post(Post* p) :
 			id(p->id), likes(p->likes), myTroll(p->myTroll) {
 	}
-	int getlikes()
+	int getLikes()
 	{
 		return likes;
 	}
@@ -38,11 +38,11 @@ public:
 
 	int compare(Post* p2);
 	void print();
-	void setTrainer(int myTroll)
+	void setTroll(int myTroll)
 	{
 		this->myTroll=myTroll;
 	}
-	void setlikes(int myTroll)
+	void setLikes(int myTroll)
 		{
 			this->likes=myTroll;
 		}
@@ -50,7 +50,7 @@ public:
 		{
 			this->id=myTroll;
 		}
-	int GetmyTroll()
+	int GetMyTroll()
 	{
 		return myTroll;
 	}
@@ -63,12 +63,12 @@ public:
 			Post(id,likes,myTroll){
 	}
 	PostById(PostById* p) :
-		Post(p->getId(),p->getlikes(),p->GetmyTroll()) {
+		Post(p->getId(),p->getLikes(),p->GetMyTroll()) {
 	}
 
 	int compare(PostById* p2);
 
-	friend void UpdatelikesPostsById(PostById** list,int size,int stoneCode, int stoneFactor);
+	friend void UpdateLikesPostsById(PostById** list,int size,int stoneCode, int stoneFactor);
 };
 
 #endif /* POST_H_ */

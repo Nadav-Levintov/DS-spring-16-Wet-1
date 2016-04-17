@@ -6,6 +6,8 @@
  */
 #include "DataStruct.h"
 #include"library1.h"
+#include <exception>
+
 void* Init() {
 	try {
 		DataStruct* ds = new DataStruct();
@@ -15,63 +17,63 @@ void* Init() {
 	}
 }
 
-StatusType AddTrainer(void *DS, int trainerID) {
-	if (!DS || trainerID <= 0) {
+StatusType AddTroll(void *DS, int trollID) {
+	if (!DS || trollID <= 0) {
 		return INVALID_INPUT;
 	}
 	DataStruct* ourStruct = (DataStruct*) DS;
-	return ourStruct->addTrainer(trainerID);
+	return ourStruct->addTroll(trollID);
 }
 
-StatusType CatchPokemon(void *DS, int pokemonID, int trainerID, int level) {
-	if (!DS || pokemonID <= 0 || trainerID <= 0 || level <= 0) {
+StatusType PublishPost(void *DS, int PostID, int TrollID, int Likes) {
+	if (!DS || PostID <= 0 || TrollID <= 0 || Likes <= 0) {
 		return INVALID_INPUT;
 	}
 	DataStruct* ourStruct = (DataStruct*) DS;
-	return ourStruct->CatchPokemon(pokemonID, trainerID, level);
+	return ourStruct->PublishPost(PostID, TrollID, Likes);
 
 }
 
-StatusType FreePokemon(void *DS, int pokemonID) {
-	if (pokemonID <= 0 || DS == NULL) {
+StatusType DeletePost(void *DS, int PostID) {
+	if (PostID <= 0 || DS == NULL) {
 		return INVALID_INPUT;
 	}
 	DataStruct* ourStruct = (DataStruct*) DS;
-	return ourStruct->FreePokemon(pokemonID);
+	return ourStruct->DeletePost(PostID);
 }
 
-StatusType LevelUp(void *DS, int pokemonID, int levelIncrease) {
-	if (levelIncrease <= 0 || pokemonID <= 0 || DS == NULL) {
+StatusType FeedTroll(void *DS, int PostID, int LikesIncrease) {
+	if (LikesIncrease <= 0 || PostID <= 0 || DS == NULL) {
 		return INVALID_INPUT;
 	}
 	DataStruct* ourStruct = (DataStruct*) DS;
-	return ourStruct->LevelUp(pokemonID, levelIncrease);
+	return ourStruct->FeedTroll(PostID, LikesIncrease);
 }
 
-StatusType GetTopPokemon(void *DS, int trainerID, int *pokemonID) {
-	if (trainerID == 0 || pokemonID == NULL || DS == NULL) {
+StatusType GetTopPost(void *DS, int TrollID, int *PostID) {
+	if (TrollID == 0 || PostID == NULL || DS == NULL) {
 		return INVALID_INPUT;
 	}
 	DataStruct* ourStruct = (DataStruct*) DS;
-	return ourStruct->GetTopPokemon(trainerID,pokemonID);
+	return ourStruct->GetTopPost(TrollID,PostID);
 }
 
-StatusType GetAllPokemonsByLevel(void *DS, int trainerID, int **pokemons, int *numOfPokemon){
-	if(trainerID == 0 || pokemons == NULL || DS == NULL || numOfPokemon == NULL) {
+StatusType GetAllPostsByLikes(void *DS, int TrollID, int **Posts, int *numOfPost){
+	if(TrollID == 0 || Posts == NULL || DS == NULL || numOfPost == NULL) {
 		return INVALID_INPUT;
 	}
 	DataStruct* ourStruct = (DataStruct*) DS;
-	return ourStruct->GetAllPokemonsByLevel(trainerID,pokemons,numOfPokemon);
+	return ourStruct->GetAllPostsByLikes(TrollID,Posts,numOfPost);
 }
 
-StatusType EvolvePokemon(void *DS, int pokemonID, int evolvedID)
+StatusType EvolvePost(void *DS, int PostID, int evolvedID)
 {
-	if(evolvedID <=0 || pokemonID <=0 || DS==NULL)
+	if(evolvedID <=0 || PostID <=0 || DS==NULL)
 	{
 		return INVALID_INPUT;
 	}
 	DataStruct* ourStruct = (DataStruct*) DS;
-	return ourStruct->EvolvePokemon(pokemonID, evolvedID);
+	return ourStruct->EvolvePost(PostID, evolvedID);
 }
 void Quit(void **DS)
 {
@@ -82,14 +84,14 @@ void Quit(void **DS)
 	*DS = NULL;
 }
 
-StatusType UpdateLevels(void *DS, int stoneCode, int stoneFactor){
+StatusType UpdateLikes(void *DS, int stoneCode, int stoneFactor){
 	if(stoneFactor <1 || stoneCode <1 || DS==NULL)
 	{
 		return INVALID_INPUT;
 	}
 	try{
 		DataStruct* ourStruct = (DataStruct*) DS;
-		return ourStruct->UpdateLevels(stoneCode,stoneFactor);
+		return ourStruct->UpdateLikes(stoneCode,stoneFactor);
 	} catch (std::bad_alloc& e) {
 		return ALLOCATION_ERROR;
 	}
