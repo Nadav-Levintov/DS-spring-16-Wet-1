@@ -20,10 +20,10 @@ private:
 	int likes;
 	int myTroll;
 public:
-	pokemon(int id = -1, int likes = -1, int myTroll=-1) :
+	Post(int id = -1, int likes = -1, int myTroll=-1) :
 			id(id), likes(likes), myTroll(myTroll) {
 	}
-	pokemon(pokemon* p) :
+	Post(Post* p) :
 			id(p->id), likes(p->likes), myTroll(p->myTroll) {
 	}
 	int getlikes()
@@ -34,9 +34,9 @@ public:
 		{
 			return id;
 		}
-	friend void UpdateReorderPokemons(pokemon** list,int size,int stoneCode, int stoneFactor);
+	friend void UpdateReorderPosts(Post** list,int size,int stoneCode, int stoneFactor);
 
-	int compare(pokemon* p2);
+	int compare(Post* p2);
 	void print();
 	void setTrainer(int myTroll)
 	{
@@ -57,18 +57,18 @@ public:
 
 };
 
-class pokemonById: public pokemon{
+class PostById: public Post{
 public:
-	pokemonById(int id = -1, int likes = -1, int myTroll=-1) :
-			pokemon(id,likes,myTroll){
+	PostById(int id = -1, int likes = -1, int myTroll=-1) :
+			Post(id,likes,myTroll){
 	}
-	pokemonById(pokemonById* p) :
-		pokemon(p->getId(),p->getlikes(),p->GetmyTroll()) {
+	PostById(PostById* p) :
+		Post(p->getId(),p->getlikes(),p->GetmyTroll()) {
 	}
 
-	int compare(pokemonById* p2);
+	int compare(PostById* p2);
 
-	friend void UpdatelikesPokemonsById(pokemonById** list,int size,int stoneCode, int stoneFactor);
+	friend void UpdatelikesPostsById(PostById** list,int size,int stoneCode, int stoneFactor);
 };
 
 #endif /* POST_H_ */

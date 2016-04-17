@@ -15,35 +15,35 @@
 #include "Btree.h"
 #include "post.h"
 
-class trainer {
+class Troll {
 private:
 	const int id;
-	trainer* nextTrainer;
-	tree<pokemon>* PokemonTree;
+	Troll* nextTroll;
+	tree<Post>* PostTree;
 
 public:
-	trainer(const int id, trainer* nextTrainer, pokemon* maxPokemon = NULL,
-			int numOfPokemons = 0, tree<pokemon>* pokemonTree = NULL) :
-			id(id), nextTrainer(nextTrainer), PokemonTree(pokemonTree) {
+	Troll(const int id, Troll* nextTroll, Post* maxPost = NULL,
+			int numOfPosts = 0, tree<Post>* PostTree = NULL) :
+			id(id), nextTroll(nextTroll), PostTree(PostTree) {
 	}
-	trainer(int id) : id(id), nextTrainer(NULL){
-		PokemonTree=new tree<pokemon>();
+	Troll(int id) : id(id), nextTroll(NULL){
+		PostTree=new tree<Post>();
 	}
-	~trainer() {
-		delete PokemonTree;
+	~Troll() {
+		delete PostTree;
 	}
 
-	pokemon* getMaxPokemon();
-	trainer* getNextTrainer();
-	tree<pokemon>* getPokemonTree() {
-		return PokemonTree;
+	Post* getMaxPost();
+	Troll* getNextTroll();
+	tree<Post>* getPostTree() {
+		return PostTree;
 	}
-	void setNextTrainer(trainer* newTrainer);
+	void setNextTroll(Troll* newTroll);
 	int getId() {
 		return id;
 	}
 
-	StatusType addPokemon(pokemon* p);
+	StatusType addPost(Post* p);
 };
 
 #endif /* TROLL_H_ */
