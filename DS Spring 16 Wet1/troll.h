@@ -1,19 +1,19 @@
 /*
- * trainer.h
+ * troll.h
  *
  *  Created on: 1 בדצמ 2015
  *      Author: Nir Diamant
  */
 
-#ifndef TRAINER_H_
-#define TRAINER_H_
+#ifndef TROLL_H_
+#define TROLL_H_
 
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
 #include "Btree.h"
-#include "pokemon.h"
+#include "post.h"
 
 class trainer {
 private:
@@ -46,4 +46,4 @@ public:
 	StatusType addPokemon(pokemon* p);
 };
 
-#endif /* TRAINER_H_ */
+#endif /* TROLL_H_ */
