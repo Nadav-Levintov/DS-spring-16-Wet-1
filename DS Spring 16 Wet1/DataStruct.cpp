@@ -6,10 +6,7 @@
  */
 
 #include "DataStruct.h"
-#include "troll.h"
-#include "post.h"
-#include <stdlib.h>
-#include <stdio.h>
+
 #include <iostream>
 using std::cout;
 using std::endl;

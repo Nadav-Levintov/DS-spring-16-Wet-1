@@ -8,7 +8,10 @@
 #ifndef DATASTRUCT_H_
 #define DATASTRUCT_H_
 
-#include "Troll.h"
+#include "troll.h"
+#include "post.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 class DataStruct {
 private:
