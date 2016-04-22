@@ -26,7 +26,7 @@ StatusType AddTroll(void *DS, int trollID) {
 }
 
 StatusType PublishPost(void *DS, int PostID, int TrollID, int Likes) {
-	if (!DS || PostID <= 0 || TrollID <= 0 || Likes <= 0) {
+	if (!DS || PostID <= 0 || TrollID <= 0 || Likes < 0) {
 		return INVALID_INPUT;
 	}
 	DataStruct* ourStruct = (DataStruct*) DS;
