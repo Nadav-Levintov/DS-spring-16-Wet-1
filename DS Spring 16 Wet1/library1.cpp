@@ -66,15 +66,6 @@ StatusType GetAllPostsByLikes(void *DS, int TrollID, int **Posts, int *numOfPost
 	return ourStruct->GetAllPostsByLikes(TrollID,Posts,numOfPost);
 }
 
-StatusType EvolvePost(void *DS, int PostID, int evolvedID)
-{
-	if(evolvedID <=0 || PostID <=0 || DS==NULL)
-	{
-		return INVALID_INPUT;
-	}
-	DataStruct* ourStruct = (DataStruct*) DS;
-	return ourStruct->EvolvePost(PostID, evolvedID);
-}
 void Quit(void **DS)
 {
 	if(DS == NULL) return;

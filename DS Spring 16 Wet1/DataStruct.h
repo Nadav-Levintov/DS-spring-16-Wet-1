@@ -43,7 +43,6 @@ public:
 
 	StatusType GetTopPost(int TrollID, int *PostID);
 
-	StatusType EvolvePost(int PostID, int evolvedID);
 
 	StatusType GetAllPostsByLikes(int TrollID, int **Posts,
 			int *numOfPost);

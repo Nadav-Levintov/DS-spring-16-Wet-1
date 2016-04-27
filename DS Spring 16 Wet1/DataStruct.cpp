@@ -215,52 +215,6 @@ StatusType DataStruct::GetAllPostsByLikes(int TrollID, int **Posts,
 	return SUCCESS;
 }
 
-StatusType DataStruct::EvolvePost(int PostID, int evolvedID) {
-
-	PostById temppostById = PostById(PostID);
-	PostById tempEvolvepostById = PostById(evolvedID);
-
-	//check if Post exist with old id and there is no Post with new id
-	if (!PostTreeById->isIn(&temppostById) || PostTreeById->isIn(&tempEvolvepostById)) {
-		return FAILURE;
-	}
-	StatusType stat;
-	try {
-		//get data of Post with the old id
-		PostById* temppostOldTreeById = PostTreeById->getData(&temppostById);
-		int Likes = temppostOldTreeById->getLikes();
-		int myTrollId = temppostOldTreeById->GetMyTroll();
-		delete temppostOldTreeById;
-
-		//find Troll with the Post
-		Troll* tempTroll = findTroll(myTrollId);
-		assert(tempTroll!=NULL);
-
-		//remove the Post from two main trees and Troll tree
-		PostById postOldTreeById(PostID,Likes,myTrollId);
-		Post postOldTree(PostID,Likes,myTrollId);
-		stat = PostTree->remove(&postOldTree);
-		assert(stat==SUCCESS);
-		stat = PostTreeById->remove(&postOldTreeById);
-		assert(stat==SUCCESS);
-		stat = tempTroll->getPostTree()->remove(&postOldTree);
-		assert(stat==SUCCESS);
-
-		//add the Post with new id to the two main trees and Troll tree
-		Post newPost(evolvedID, Likes, myTrollId);
-		PostById newPostById(evolvedID, Likes, myTrollId);
-		stat = PostTree->add(&newPost);
-		assert(stat==SUCCESS);
-		stat = PostTreeById->add(&newPostById);
-		assert(stat==SUCCESS);
-		stat = tempTroll->getPostTree()->add(&newPost);
-		assert(stat==SUCCESS);
-
-	} catch (std::bad_alloc& e) {
-		return ALLOCATION_ERROR;
-	}
-	return SUCCESS;
-}
 
 void DataStruct::deleteTrolls() {
 //delete Trolls:
